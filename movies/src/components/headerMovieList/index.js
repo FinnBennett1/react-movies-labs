@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 const Header = (props ) => {
   const title = props.title
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  
 
   return (
     <Paper 
@@ -20,14 +21,13 @@ const Header = (props ) => {
         marginBottom: 1.5,
       }}
       >
-      <IconButton aria-label="go back" onClick={() => navigate(-1)}>
+        <IconButton aria-label="go back" onClick={() => navigate(-1)}>
         <ArrowBackIcon color="primary" fontSize="large" />
       </IconButton>
 
       <Typography variant="h4" component="h3">
         {title}
       </Typography>
-
       <IconButton aria-label="go forward" onClick={() => navigate(+1)}>
         <ArrowForwardIcon color="primary" fontSize="large" />
       </IconButton>
