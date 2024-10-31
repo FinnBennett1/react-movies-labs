@@ -12,6 +12,7 @@ import MovieReviews from "../movieReviews";
 
 
 
+
 const root = {
     display: "flex",
     justifyContent: "center",
