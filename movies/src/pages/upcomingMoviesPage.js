@@ -3,8 +3,7 @@
  import PageTemplate from '../components/templateMovieListPage';
  import { useQuery } from 'react-query';
  import Spinner from '../components/spinner';
- import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
- import { MoviesContext } from '../contexts/moviesContext';
+ import AddToMustWatchIcon from "../components/cardIcons/addToMustWatch";
 
 
  const UpcomingMoviesPage = () => {
@@ -19,13 +18,19 @@
    }
 
    const movies = data.results;
+   
+   // Redundant, but necessary to avoid app crashing.
+  const mustWatch = movies.filter(m => m.mustWatch)
+  localStorage.setItem('must watch', JSON.stringify(mustWatch))
+  const addToMustWatch = (movieId) => true 
+
 
    return (
      <PageTemplate
        title="Discover Movies"
        movies={movies}
        action={(movie) => {
-         return <PlaylistAddIcon movie={movie} />
+         return <AddToMustWatchIcon movie={movie} />
        }}
      />
  );

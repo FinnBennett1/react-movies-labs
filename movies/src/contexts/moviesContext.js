@@ -21,21 +21,32 @@ const MoviesContextProvider = (props) => {
     setMyReviews( {...myReviews, [movie.id]: review } )
   };
   
-  // We will use this function in the next step
+  
   const removeFromFavorites = (movie) => {
     setFavorites( favorites.filter(
       (mId) => mId !== movie.id
     ) )
   };
 
-  const addToMustWatch = (movieId) => {
-    setMustWatch((prevMustWatch) => [...prevMustWatch, movieId]);
-    console.log("Must Watch List:", [...mustWatch, movieId]); // Log the current state
-  };
+  const addToMustWatch = (movie) => {
+    let newMustWatch = [];
+    if (!mustWatch.includes(movie.id)){
+      newMustWatch = [...mustWatch, movie.id];
+    }
+    else{
+      newMustWatch = [...mustWatch];
+    }
+    setMustWatch(newMustWatch)
+  
+  //   setMustWatch((prevMustWatch) => [...prevMustWatch, movieId]);
+  //   console.log("Must Watch List:", [...mustWatch, movieId]); // Log the current state
+   };
 
-  const removeFromMustWatch = (movieId) => {
-    setMustWatch((prevMustWatch) => prevMustWatch.filter(id => id !== movieId));
-    console.log("Updated Must Watch List after removal:", mustWatch.filter(id => id !== movieId)); // Log the current state after removal
+  const removeFromMustWatch = (movie) => {
+    setMustWatch( mustWatch.filter(
+      (mId) => mId !== movie.id
+    ))
+    console.log("Updated Must Watch List after removal:", mustWatch.filter(id => id !== movie)); // Log the current state after removal
   };
 
 

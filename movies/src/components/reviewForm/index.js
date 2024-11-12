@@ -1,15 +1,16 @@
-
+import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
-import React, { useState, useContext } from "react";
 import { MoviesContext } from "../../contexts/moviesContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+
+
 
 const ratings = [
   {
@@ -88,7 +89,7 @@ const ReviewForm = ({ movie }) => {
   const onSubmit = (review) => {
     review.movieId = movie.id;
     review.rating = rating;
-    // console.log(review);
+    console.log(review);
     context.addReview(movie, review);
     setOpen(true); // NEW
   };
