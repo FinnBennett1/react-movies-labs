@@ -4,7 +4,8 @@
  import { useQuery } from 'react-query';
  import Spinner from '../components/spinner';
  import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
+ import { MoviesContext } from '../contexts/moviesContext';
+
 
  const UpcomingMoviesPage = () => {
    const { data, error, isLoading, isError } = useQuery('upcoming', getUpcomingMovies);
