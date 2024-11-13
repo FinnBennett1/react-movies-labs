@@ -5,7 +5,7 @@ export const MoviesContext = React.createContext(null);
 const MoviesContextProvider = (props) => {
   const [favorites, setFavorites] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
-  const [mustWatch, setMustWatch] = useState([]);
+  const [watchlist, setWatchList] = useState([]);
 
   const addToFavorites = (movie) => {
     let newFavorites = [];
@@ -28,26 +28,26 @@ const MoviesContextProvider = (props) => {
     ) )
   };
 
-  const addToMustWatch = (movie) => {
-    let newMustWatch = [];
-    if (!mustWatch.includes(movie.id)){
-      newMustWatch = [...mustWatch, movie.id];
-    }
-    else{
-      newMustWatch = [...mustWatch];
-    }
-    setMustWatch(newMustWatch)
-  
-  //   setMustWatch((prevMustWatch) => [...prevMustWatch, movieId]);
-  //   console.log("Must Watch List:", [...mustWatch, movieId]); // Log the current state
-   };
+ 
+ const addToWatchlist = (movie) => {
+  let newWatchList = [];
+  if (!watchlist.includes(movie.id)) {
+    newWatchList = [...watchlist, movie.id];
+  } else {
+    newWatchList = [...watchlist];
+  }
+  setWatchList(newWatchList);
+};
 
-  const removeFromMustWatch = (movie) => {
-    setMustWatch( mustWatch.filter(
-      (mId) => mId !== movie.id
-    ))
-    console.log("Updated Must Watch List after removal:", mustWatch.filter(id => id !== movie)); // Log the current state after removal
-  };
+
+const removeFromWatchList = (movie) => {
+  setWatchList(watchlist.filter((mId) => mId !== movie.id));
+  console.log(
+    "Updated Must Watch List after removal:",
+    watchlist.filter((id) => id !== movie.id)
+  ); // Log the current state after removal
+};
+
 
 
   return (
@@ -57,8 +57,8 @@ const MoviesContextProvider = (props) => {
         addToFavorites,
         removeFromFavorites,
         addReview,
-        addToMustWatch,
-        removeFromMustWatch,
+        addToWatchlist,
+        removeFromWatchList,
       }}
     >
       {props.children}

@@ -102,3 +102,27 @@ export const getMovie = (args) => {
       throw error;
     });
   };
+
+  export const getWatchlistMovies = () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: `Bearer ${process.env.REACT_APP_TMDB_ACCESS_TOKEN}`
+      }
+    };
+  
+    return fetch('https://api.themoviedb.org/3/account/21586275/watchlist', options)
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((error) => {
+            throw new Error(error.status_message || "Something went wrong");
+          });
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };

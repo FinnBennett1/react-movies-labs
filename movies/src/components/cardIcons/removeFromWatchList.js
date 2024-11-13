@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { MoviesContext } from "../../contexts/moviesContext";
 
-const RemoveFromMustWatchIcon = ({ movie }) => {
+const RemoveFromWatchListIcon = ({ movie }) => {
   const context = useContext(MoviesContext);
 
   const handleRemoveFromMustWatch = (e) => {
@@ -21,4 +21,4 @@ const RemoveFromMustWatchIcon = ({ movie }) => {
   );
 };
 
-export default RemoveFromMustWatchIcon;
+export default RemoveFromWatchListIcon;

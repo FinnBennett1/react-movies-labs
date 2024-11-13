@@ -1,40 +1,34 @@
- import React from "react";
- import { getUpcomingMovies } from "../api/tmdb-api";
- import PageTemplate from '../components/templateMovieListPage';
- import { useQuery } from 'react-query';
- import Spinner from '../components/spinner';
- import AddToMustWatchIcon from "../components/cardIcons/addToMustWatch";
+import React from "react";
+import { getUpcomingMovies } from "../api/tmdb-api";
+import PageTemplate from "../components/templateMovieListPage";
+import { useQuery } from "react-query";
+import Spinner from "../components/spinner";
+import AddToWatchListIcon from "../components/cardIcons/addToWatchList"; 
 
+const UpcomingMoviesPage = () => {
+  // Fetch upcoming movies
+  const { data, error, isLoading, isError } = useQuery("upcoming", getUpcomingMovies);
 
- const UpcomingMoviesPage = () => {
-   const { data, error, isLoading, isError } = useQuery('upcoming', getUpcomingMovies);
+  // Handle loading state
+  if (isLoading) {
+    return <Spinner />;
+  }
 
-   if (isLoading) {
-     return <Spinner />;
-   }
+  // Handle error state
+  if (isError) {
+    return <h1>{error.message}</h1>;
+  }
 
-   if (isError) {
-     return <h1>{error.message}</h1>;
-   }
+  // Access movies from the API data
+  const movies = data.results;
 
-   const movies = data.results;
-   
-   // Redundant, but necessary to avoid app crashing.
-  const mustWatch = movies.filter(m => m.mustWatch)
-  localStorage.setItem('must watch', JSON.stringify(mustWatch))
-  const addToMustWatch = (movieId) => true 
+  return (
+    <PageTemplate
+      title="Upcoming Movies"
+      movies={movies}
+      action={(movie) => <AddToWatchListIcon movie={movie} />} // Use AddToWatchListIcon component
+    />
+  );
+};
 
-
-   return (
-     <PageTemplate
-       title="Discover Movies"
-       movies={movies}
-       action={(movie) => {
-         return <AddToMustWatchIcon movie={movie} />
-       }}
-     />
- );
- };
- export default UpcomingMoviesPage;
-
-
+export default UpcomingMoviesPage;
