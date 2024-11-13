@@ -6,6 +6,7 @@ const MoviesContextProvider = (props) => {
   const [favorites, setFavorites] = useState( [] )
   const [myReviews, setMyReviews] = useState( {} ) 
   const [mustWatch, setMustWatch] = useState( [] )
+  const [watched, setMarkedAsWatched] = useState( [] )
 
   const addToFavorites = (movie) => {
     let newFavorites = [];
@@ -43,9 +44,22 @@ const MoviesContextProvider = (props) => {
     ) )
   };
 
-  const removeFromMustWatch = (movie) => {
-    setMustWatch(mustWatch.filter((mId) => mId !== movie.id));
+  const markAsWatched = (movie) => {
+    let newMarkedWatched = [];
+    if(!watched.includes(movie.id)){
+      newMarkedWatched = [...watched, movie.id];
+      console.log("Movie added:", movie.id);
+    }
+    else{
+      newMarkedWatched = [...watched];
+      console.log("Movie already in list:", movie.id);
+    }
+  
+    setMarkedAsWatched(newMarkedWatched)
   };
+
+
+
   
 
   return (
@@ -56,7 +70,8 @@ const MoviesContextProvider = (props) => {
         removeFromFavorites,
         addReview,
         addToMustWatch,
-        removeFromMustWatch
+        markAsWatched
+        
       }}
     >
       {props.children}
