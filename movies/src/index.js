@@ -11,7 +11,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage'
 import UpcomingMoviesPage from "./pages/upcomingMoviesPage";
-import MustWatchMoviesPage from "./pages/mustWatcheMoviesPage";
+import MustWatchMoviesPage from "./pages/mustWatchMoviesPage";
 
 
 const queryClient = new QueryClient({

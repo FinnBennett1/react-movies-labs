@@ -3,10 +3,10 @@
  import PageTemplate from '../components/templateMovieListPage';
  import { useQuery } from 'react-query';
  import Spinner from '../components/spinner';
- import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
+ import AddToMustWatchIcon from "../components/cardIcons/addToMustWatch";
 
- const UpcomingMoviesPage = () => {
+
+ const UpcomingMoviesPage = (props) => {
    const { data, error, isLoading, isError } = useQuery('upcoming', getUpcomingMovies);
 
    if (isLoading) {
@@ -19,12 +19,17 @@ import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
 
    const movies = data.results;
 
+   const mustWatch = movies.filter(m => m.mustWatch)
+   localStorage.setItem('must watch', JSON.stringify(mustWatch))
+   const addToMustWatch = (movieId) => true 
+ 
+
    return (
      <PageTemplate
-       title="Discover Movies"
+       title="Discover New Movies"
        movies={movies}
        action={(movie) => {
-         return <PlaylistAddIcon movie={movie} />
+         return <AddToMustWatchIcon movie={movie} />
        }}
      />
  );
