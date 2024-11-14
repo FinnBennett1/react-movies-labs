@@ -102,7 +102,7 @@ export const getMovie = (args) => {
       throw error;
     });
   };
-
+// new static 
   export const getPopularMovies = () => {
     return fetch(
       `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=1`
@@ -119,4 +119,22 @@ export const getMovie = (args) => {
     });
   };
 
+  // new paramertised (id)
+  export const getMovieRecommendations = ({ queryKey }) => {
+    const [, idPart] = queryKey;
+    const { id } = idPart;
+    return fetch(
+      `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.REACT_APP_TMDB_KEY}`
+    ).then( (response) => {
+      if (!response.ok) {
+        return response.json().then((error) => {
+          throw new Error(error.status_message || "Something went wrong");
+        });
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      throw error
+   });
+  };
   
