@@ -14,6 +14,8 @@ import { getMovieCast, getSimilarMovies } from "../../api/tmdb-api";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Link } from "react-router-dom";
+
+
 const root = {
   display: "flex",
   justifyContent: "center",

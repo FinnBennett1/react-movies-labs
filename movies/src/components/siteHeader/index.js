@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase-config";
+import { signOut } from "firebase/auth";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -24,6 +27,7 @@ const SiteHeader = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);
 
   const menuOptions = [
     { label: "Home", path: "/" },
@@ -49,6 +53,15 @@ const SiteHeader = () => {
 
   const handleDropdownMenu = (event) => {
     setDropdownAnchorEl(event.currentTarget);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      alert("You have logged out.");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (
@@ -95,10 +108,7 @@ const SiteHeader = () => {
                     {opt.label}
                   </MenuItem>
                 ))}
-                <MenuItem
-                  aria-haspopup="true"
-                  onClick={handleDropdownMenu}
-                >
+                <MenuItem aria-haspopup="true" onClick={handleDropdownMenu}>
                   More
                 </MenuItem>
                 <Menu
@@ -116,6 +126,20 @@ const SiteHeader = () => {
                     </MenuItem>
                   ))}
                 </Menu>
+                {user ? (
+                  <>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </>
+                ) : (
+                  <>
+                    <MenuItem onClick={() => handleMenuSelect("/login")}>
+                      Login
+                    </MenuItem>
+                    <MenuItem onClick={() => handleMenuSelect("/signup")}>
+                      Sign Up
+                    </MenuItem>
+                  </>
+                )}
               </Menu>
             </>
           ) : (
@@ -152,6 +176,34 @@ const SiteHeader = () => {
                   </MenuItem>
                 ))}
               </Menu>
+              {user ? (
+                <>
+                  <Typography
+                    variant="body2"
+                    sx={{ marginRight: "1em", color: "white" }}
+                  >
+                    Welcome, {user.email}
+                  </Typography>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    color="inherit"
+                    onClick={() => handleMenuSelect("/login")}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    color="inherit"
+                    onClick={() => handleMenuSelect("/signup")}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </>
           )}
         </Toolbar>
