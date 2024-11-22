@@ -8,19 +8,21 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router-dom";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
+const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
-const SiteHeader = ({ history }) => {
+const SiteHeader = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const dropdownOpen = Boolean(dropdownAnchorEl);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  
+
   const navigate = useNavigate();
 
   const menuOptions = [
@@ -30,12 +32,23 @@ const SiteHeader = ({ history }) => {
     { label: "Popular Movies", path: "/movies/popular" },
   ];
 
+  const dropdownMenuOptions = [
+    { label: "Trending Movies", path: "/movies/trending" },
+    { label: "Now Playing Movies", path: "/movies/now-playing" },
+  ];
+
   const handleMenuSelect = (pageURL) => {
     navigate(pageURL, { replace: true });
+    setAnchorEl(null);
+    setDropdownAnchorEl(null);
   };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleDropdownMenu = (event) => {
+    setDropdownAnchorEl(event.currentTarget);
   };
 
   return (
@@ -48,33 +61,53 @@ const SiteHeader = ({ history }) => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             All you ever wanted to know about Movies!
           </Typography>
-            {isMobile ? (
-              <>
-                <IconButton
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
+          {isMobile ? (
+            <>
+              <IconButton
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+              >
+                {menuOptions.map((opt) => (
+                  <MenuItem
+                    key={opt.label}
+                    onClick={() => handleMenuSelect(opt.path)}
+                  >
+                    {opt.label}
+                  </MenuItem>
+                ))}
+                <MenuItem
                   aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
+                  onClick={handleDropdownMenu}
                 >
-                  <MenuIcon />
-                </IconButton>
+                  More
+                </MenuItem>
                 <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
+                  id="dropdown-menu"
+                  anchorEl={dropdownAnchorEl}
+                  open={dropdownOpen}
+                  onClose={() => setDropdownAnchorEl(null)}
                 >
-                  {menuOptions.map((opt) => (
+                  {dropdownMenuOptions.map((opt) => (
                     <MenuItem
                       key={opt.label}
                       onClick={() => handleMenuSelect(opt.path)}
@@ -83,20 +116,44 @@ const SiteHeader = ({ history }) => {
                     </MenuItem>
                   ))}
                 </Menu>
-              </>
-            ) : (
-              <>
-                {menuOptions.map((opt) => (
-                  <Button
+              </Menu>
+            </>
+          ) : (
+            <>
+              {menuOptions.map((opt) => (
+                <Button
+                  key={opt.label}
+                  color="inherit"
+                  onClick={() => handleMenuSelect(opt.path)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+              <Button
+                color="inherit"
+                aria-controls="dropdown-menu"
+                aria-haspopup="true"
+                onClick={handleDropdownMenu}
+              >
+                More
+              </Button>
+              <Menu
+                id="dropdown-menu"
+                anchorEl={dropdownAnchorEl}
+                open={dropdownOpen}
+                onClose={() => setDropdownAnchorEl(null)}
+              >
+                {dropdownMenuOptions.map((opt) => (
+                  <MenuItem
                     key={opt.label}
-                    color="inherit"
                     onClick={() => handleMenuSelect(opt.path)}
                   >
                     {opt.label}
-                  </Button>
+                  </MenuItem>
                 ))}
-              </>
-            )}
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <Offset />
