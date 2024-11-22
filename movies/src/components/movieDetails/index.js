@@ -10,8 +10,10 @@ import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 import MovieReviews from "../movieReviews";
 import { useQuery } from "react-query";
-import { getMovieCast } from "../../api/tmdb-api";
-
+import { getMovieCast, getSimilarMovies } from "../../api/tmdb-api";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Link } from "react-router-dom";
 const root = {
   display: "flex",
   justifyContent: "center",
@@ -22,6 +24,19 @@ const root = {
 };
 const chip = { margin: 0.5 };
 
+const scrollContainer = {
+  display: "flex",
+  overflowX: "auto",
+  padding: "1em",
+  gap: "1em",
+};
+
+const similarMovieCard = {
+  minWidth: "150px",
+  textAlign: "center",
+  flexShrink: 0,
+};
+
 const MovieDetails = ({ movie }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [castDrawerOpen, setCastDrawerOpen] = useState(false);
@@ -30,6 +45,12 @@ const MovieDetails = ({ movie }) => {
     ["movieCast", { id: movie.id }],
     getMovieCast
   );
+
+  const {
+    data: similarMoviesData,
+    error: similarMoviesError,
+    isLoading: similarMoviesLoading,
+  } = useQuery(["similarMovies", { id: movie.id }], getSimilarMovies);
 
   return (
     <>
@@ -60,23 +81,11 @@ const MovieDetails = ({ movie }) => {
         />
         <Chip
           icon={<StarRate />}
-          label={`${movie.vote_average} (${movie.vote_count}`}
+          label={'${movie.vote_average} (${movie.vote_count})'}
         />
         <Chip label={`Released: ${movie.release_date}`} />
       </Paper>
 
-      <Paper component="ul" sx={{ ...root }}>
-        <li>
-          <Chip label="Production Countries" sx={{ ...chip }} color="primary" />
-        </li>
-        {movie.production_countries.map((country) => (
-          <li key={country.name}>
-            <Chip label={country.name} sx={{ ...chip }} />
-          </li>
-        ))}
-      </Paper>
-
-      
       <Typography variant="h5" component="h3">
         Cast
       </Typography>
@@ -88,11 +97,15 @@ const MovieDetails = ({ movie }) => {
         <Paper component="ul" sx={{ ...root }}>
           {castData.cast.slice(0, 5).map((member) => (
             <li key={member.id}>
-              <Chip label={`${member.name} as ${member.character}`} sx={{ ...chip }} />
+              <Chip
+                label={`${member.name} as ${member.character}`}
+                sx={{ ...chip }}
+              />
             </li>
           ))}
         </Paper>
       )}
+
       <Fab
         color="primary"
         variant="extended"
@@ -106,7 +119,6 @@ const MovieDetails = ({ movie }) => {
         Full Cast
       </Fab>
 
-      
       <Drawer
         anchor="top"
         open={castDrawerOpen}
@@ -136,6 +148,7 @@ const MovieDetails = ({ movie }) => {
         <NavigationIcon />
         Reviews
       </Fab>
+
       <Drawer
         anchor="top"
         open={drawerOpen}
@@ -143,6 +156,38 @@ const MovieDetails = ({ movie }) => {
       >
         <MovieReviews movie={movie} />
       </Drawer>
+
+      <Box sx={{ marginTop: "2em" }}>
+  <Typography variant="h5" component="h3" sx={{ marginBottom: "1em" }}>
+    Similar Movies
+  </Typography>
+  {similarMoviesLoading ? (
+    <CircularProgress />
+  ) : similarMoviesError ? (
+    <Typography variant="body1">{similarMoviesError.message}</Typography>
+  ) : (
+    <Box sx={{ ...scrollContainer }}>
+      {similarMoviesData.results.map((similarMovie) => (
+        <Link
+          to={`/movies/${similarMovie.id}`}
+          key={similarMovie.id}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Box sx={{ ...similarMovieCard }}>
+            <img
+              src={`https://image.tmdb.org/t/p/w200/${similarMovie.poster_path}`}
+              alt={similarMovie.title}
+              style={{ width: "100%", borderRadius: "8px" }}
+            />
+            <Typography variant="body2" sx={{ marginTop: "0.5em" }}>
+              {similarMovie.title}
+            </Typography>
+          </Box>
+        </Link>
+      ))}
+    </Box>
+  )}
+</Box>
     </>
   );
 };
